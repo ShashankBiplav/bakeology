@@ -23,8 +23,16 @@ const chefSchema = new Schema({
         type: String,
         required: true
     },
+    resetToken:{
+        type: String
+    },
+    resetTokenExpiryDate:{
+        type: Date
+    },
     recipes:[{ 
         type: Schema.Types.ObjectId,
         ref: 'Recipe'
     }],
 });
+
+module.exports = mongoose.model('Chef', chefSchema);
