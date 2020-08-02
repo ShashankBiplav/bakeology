@@ -9,7 +9,7 @@ exports.getRecipes = async(req, res, next) =>{
     const perPage = 2;
     try{
         const totalRecipes = await Recipe.find().countDocuments();
-        const recipes = await Recipe.find().populate('chef').sort({createdAt: -1})
+        const recipes = await Recipe.find().populate('chef')
             .skip((currentPage - 1) * perPage).limit(perPage);
         res.status(200).json({
             message: 'Recipes Fetched Successfully.',
