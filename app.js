@@ -19,6 +19,18 @@ app.use((req, res, next) => {
     next();
 });
 
+//central error handling middleware
+app.use((error, req, res, next) => {
+    console.log(error);
+    const status = error.statusCode || 500;
+    const message = error.message;
+    const data = error.data;
+    res.status(status).json({
+        message: message,
+        data: data
+    });
+});
+
 mongoose.connect(process.env.MONGODB_URI,{
     useUnifiedTopology: true,
     useNewUrlParser: true,
