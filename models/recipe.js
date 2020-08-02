@@ -19,8 +19,10 @@ const recipeSchema = new Schema({
   categories: [{ type: String}],
   steps: [{ type: String }],
   chef:{
-      type: Schema.Types.ObjectId,
-      ref: 'Chef',
+      //TODO: ADD chef id when chef auth and creation has been done
+      // type: Schema.Types.ObjectId,
+      // ref: 'Chef',
+      type: String,
       required: true
   },
   complexity:{
