@@ -2,13 +2,7 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 
-const mongoose = require('mongoose');
-
 const app = express();
-
-require('dotenv').config();
-
-const port = process.env.PORT|| 5500;
 
 app.use(bodyParser.json());
 
@@ -19,16 +13,6 @@ app.use((req, res, next) => {
     next();
 });
 
-mongoose.connect(process.env.MONGODB_URI,{
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useFindAndModify: false
-})
-    .then(result=>{
-        console.log('Connection successful');
-        const server = app.listen(port, ()=>{
-            console.log(`listening on port${port}`);
-    });
-}).catch(err=>{
-    console.log(err);
-})
+app.listen(5500, ()=>{
+    console.log('listening on port:5500');
+});
