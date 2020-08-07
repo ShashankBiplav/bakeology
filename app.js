@@ -14,6 +14,8 @@ const port = process.env.PORT|| 5500;
 
 const app = express();
 
+const authRoutes = require('./routes/auth');
+
 const userRoutes = require('./routes/user');
 
 const chefRoutes = require('./routes/chef');
@@ -51,6 +53,8 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
+
+app.use('/auth', authRoutes);
 
 app.use('/user', userRoutes);
 

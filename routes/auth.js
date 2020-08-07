@@ -8,6 +8,8 @@ const User = require('../models/user');
 
 const isAuth = require('../middleware/is-auth');
 
+const authController = require('../controllers/auth');
+
 const router = express.Router();
 
 //USER SIGN UP
@@ -28,10 +30,12 @@ router.put('/user/signup',[
     expressValidator.check('password').trim().isLength({
         min: 5
     })
-],);
+], authController.userSignup);
 
 //USER LOGIN
-router.post('/user/login',[expressValidator.check('email').isEmail().normalizeEmail()],);
+router.post('/user/login',
+    [expressValidator.check('email').isEmail().normalizeEmail()],
+    authController.userLogin);
 
 //CHEF SIGNUP
 router.put('/chef/signup',[
@@ -56,3 +60,4 @@ router.put('/chef/signup',[
 //CHEF LOGIN
 router.post('/chef/login',[expressValidator.check('email').isEmail().normalizeEmail()],);
 
+module.exports = router;
