@@ -29,7 +29,7 @@ exports.getRecipe = async(req,res,next) =>{
   try {
       const recipe =await Recipe.findById(recipeId);
       if (!recipe){
-          const error = new Error('Post not found.');
+          const error = new Error('Recipe not found.');
           error.status = 404;
           throw error;
       }
