@@ -14,18 +14,18 @@ exports.userSignup = async (req, res, next)=>{
         const error = new Error('Validation failed.');
         error.statusCode = 422;
         error.data = errors.array();
-        throw error;
+        return next(error);
     }
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
     const preExistingUser = await User.findOne({email: email});
+    if (preExistingUser){
+        const error = new Error('User with this email already exists');
+        error.statusCode = 401;
+        return next(error);
+    }
     try {
-        if (preExistingUser){
-            const error = new Error('User with this email already exists');
-            error.statusCode = 422;
-            throw error;
-        }
         const hashedPwd = await bcrypt.hash(password, 12);
         const user = new User({
             email: email,
@@ -88,19 +88,19 @@ exports.chefSignup = async (req, res, next) => {
         const error = new Error('Validation Failed');
         error.statusCode = 422;
         error.data = errors.array();
-        throw error;
+        return next(error);
     }
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
     const profileImageUrl = req.body.profileImageUrl; //TODO: req.file.path
     const preExistingChef = await Chef.findOne({email: email});
+    if (preExistingChef){
+        const error = new Error('Chef with this email already exists');
+        error.statusCode = 422;
+        return next(error);
+    }
     try {
-        if (preExistingChef){
-            const error = new Error('Chef with this email already exists');
-            error.statusCode = 422;
-            throw error;
-        }
         const hashedPwd = await bcrypt.hash(password, 12);
         const user = new Chef({
             email: email,
