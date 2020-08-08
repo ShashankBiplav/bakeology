@@ -33,6 +33,10 @@ const chefSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Recipe'
     }],
+    isApproved:{
+        type: Boolean,
+        default: false
+    }
 });
 
 module.exports = mongoose.model('Chef', chefSchema);
