@@ -9,7 +9,7 @@ exports.getRecipes = async(req, res, next) =>{
     const perPage = 2;
     try{
         const totalRecipes = await Recipe.find().countDocuments();
-        const recipes = await Recipe.find().populate('chef')
+        const recipes = await Recipe.find().populate('chef', 'name')
             .skip((currentPage - 1) * perPage).limit(perPage);
         res.status(200).json({
             message: 'Recipes Fetched Successfully.',
@@ -27,7 +27,7 @@ exports.getRecipes = async(req, res, next) =>{
 exports.getRecipe = async(req,res,next) =>{
   const recipeId = req.params.recipeId;
   try {
-      const recipe =await Recipe.findById(recipeId);
+      const recipe =await Recipe.findById(recipeId).populate('chef', 'name');
       if (!recipe){
           const error = new Error('Recipe not found.');
           error.status = 404;
