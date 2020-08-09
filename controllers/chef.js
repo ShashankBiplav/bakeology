@@ -38,8 +38,9 @@ exports.postRecipe = async(req, res, next)=>{
     });
     try{
         await recipe.save();
-        const chef = await Chef.findById(req.chefId);
+        const chef = await Chef.findById(req.userId);
         chef.recipes.push(recipe);
+        await chef.save();
         res.status(201).json({
             message: 'Recipe created successfully',
             recipe: recipe,
@@ -88,7 +89,7 @@ exports.updateRecipe = async (req, res, next) =>{
             error.statusCode = 403;
             throw error;
         }
-        if (imageUrl !== recipe.imageUrl) {
+        if (imageUrl !== recipe.imageUrl) { //new image was uploaded
             clearImage(recipe.imageUrl);
         }
         recipe.title = title;
@@ -130,7 +131,7 @@ exports.deleteRecipe = async (req, res, next) => {
         }
         clearImage(recipe.imageUrl);
         await Recipe.findByIdAndRemove(recipeId);
-        const chef = await Chef.findById(req.chefId);
+        const chef = await Chef.findById(req.userId);
         chef.recipes.pull(recipeId);
         await chef.save();
         res.status(200).json({
