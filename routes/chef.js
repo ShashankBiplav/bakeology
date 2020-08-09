@@ -8,9 +8,9 @@ const chefController = require('../controllers/chef');
 router.post('/create-recipe', chefController.postRecipe);
 
 //edit existing recipe         POST=> /chef/edit-recipe/recipeId
-router.post('/recipe/:recipeId'); //TODO: Define this route+controller
+router.post('/recipe/:recipeId', chefController.updateRecipe); //TODO: Define this route+controller
 
 //delete a recipe              DELETE =>  /chef/delete-recipe/recipeId
-router.delete('/chef/delete-recipe/:recipeId',);  //TODO: Define this route+controller
+router.delete('/chef/delete-recipe/:recipeId',chefController.deleteRecipe);  //TODO: Define this route+controller
 
 module.exports = router;

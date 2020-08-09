@@ -35,7 +35,7 @@ exports.getRecipe = async(req,res,next) =>{
       }
       res.status(200).json({
           message: 'Recipe Fetched',
-          post: recipe
+          recipe: recipe
       });
   }catch (err){
       if (!err.statusCode) {
