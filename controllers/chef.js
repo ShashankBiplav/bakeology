@@ -8,6 +8,55 @@ const Chef = require('../models/chef');
 
 const mongoose = require("mongoose");
 
+exports.getChefRecipes = async (req, res, next) => {
+    const totalRecipes = await Recipe.find({chef:req.userId}).countDocuments();
+    const recipes = await Recipe.find({chef:req.userId});
+    try {
+        if (!recipes || totalRecipes === null){
+            const error = new Error('No recipes found');
+            error.statusCode = 404;
+            return next(error);
+        }
+        res.status(200).json({
+            message: 'Recipes Fetched Successfully.',
+            recipes: recipes,
+            totalItems: totalRecipes
+        });
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getChefRecipe = async (req, res, next) => {
+    const recipeId = req.params.recipeId;
+    try {
+        const recipe =await Recipe.findById(recipeId).populate('chef');
+        if (!recipe){
+            const error = new Error('Recipe not found.');
+            error.status = 404;
+            throw error;
+        }
+        if (recipe.chef._id.toString() !== req.userId){
+            const error = new Error('Not Authorized.');
+            error.statusCode = 403;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'Recipe Fetched',
+            recipe: recipe
+        });
+    }catch (err){
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
 exports.postRecipe = async(req, res, next)=>{
     if (!req.file) {
         const error = new Error('No image provided');
@@ -117,6 +166,7 @@ exports.updateRecipe = async (req, res, next) =>{
 
 exports.deleteRecipe = async (req, res, next) => {
     const recipeId = req.params.recipeId;
+    console.log(recipeId);
     try {
         const recipe = await Recipe.findById(recipeId);
         if (!recipe){

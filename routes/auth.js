@@ -9,7 +9,7 @@ const authController = require('../controllers/auth');
 const router = express.Router();
 
 //USER SIGN UP
-router.put('/user/signup',[
+router.post('/user/signup',[
     expressValidator.check('name').trim().not().isEmpty(),
     expressValidator.check('email').isEmail().withMessage('Invalid Email').normalizeEmail(),
     expressValidator.check('password').trim().isLength({
@@ -23,7 +23,7 @@ router.post('/user/login',
     authController.userLogin);
 
 //CHEF SIGNUP
-router.put('/chef/signup',[
+router.post('/chef/signup',[
     expressValidator.check('name').trim().not().isEmpty(),
     expressValidator.check('email').isEmail().withMessage('Invalid Email').normalizeEmail(),
     expressValidator.check('password').trim().isLength({
