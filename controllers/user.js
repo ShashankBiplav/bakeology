@@ -4,6 +4,8 @@ const path = require('path');
 
 const Recipe = require('../models/recipe');
 
+const Category = require('../models/category')
+
 exports.getRecipes = async(req, res, next) =>{
     const currentPage = req.query.page || 1;
     const perPage = 2;
@@ -17,6 +19,24 @@ exports.getRecipes = async(req, res, next) =>{
             totalItems: totalRecipes
         });
     }catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getAllCategories = async (req, res, next) => {
+    try {
+        const totalCategories = await Category.find().countDocuments();
+        const categories = await Category.find();
+        res.status(200).json({
+            message: 'Categories Fetched Successfully.',
+            recipes: categories,
+            totalItems: totalCategories
+        });
+    }
+    catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }

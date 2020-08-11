@@ -10,7 +10,19 @@ const categorySchema = new Schema({
     recipes:[{
         type: Schema.Types.ObjectId,
         ref: 'Recipe'
-    }]
+    }],
+    colorA:{
+        type: String,
+        required: true
+    },
+    colorB:{
+        type: String,
+        required: true
+    },
+    iconImageUrl:{
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Category', categorySchema);

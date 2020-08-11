@@ -6,6 +6,8 @@ const Recipe = require('../models/recipe');
 
 const Chef = require('../models/chef');
 
+const Category = require('../models/category');
+
 const mongoose = require("mongoose");
 
 exports.getChefRecipes = async (req, res, next) => {
@@ -57,6 +59,7 @@ exports.getChefRecipe = async (req, res, next) => {
     }
 };
 
+//TODO: CHECK THIS CONTROLLER
 exports.postRecipe = async(req, res, next)=>{
     if (!req.file) {
         const error = new Error('No image provided');
@@ -71,14 +74,14 @@ exports.postRecipe = async(req, res, next)=>{
     const complexity = req.body.complexity;
     const isVegetarian = req.body.isVegetarian;
     const ingredients = req.body.ingredients;
-    const categories = req.body.categories;
+    const categoryIds = req.body.categories;
     const steps = req.body.steps;
     const recipe = new Recipe({
         title: title,
         imageUrl: imageUrl,
         duration: duration,
         ingredients: ingredients,
-        categories: categories,
+        categories: categoryIds, //TODO: Check if we still can push id's as array directly
         steps:steps,
         chef: chef,
         complexity: complexity,
@@ -90,6 +93,14 @@ exports.postRecipe = async(req, res, next)=>{
         const chef = await Chef.findById(req.userId);
         chef.recipes.push(recipe);
         await chef.save();
+        async function saveIds () {
+            for (const id of categoryIds) {
+                const category = await Category.findById(id);
+                category.recipes.push(recipe);
+                await category.save();
+            }
+        }
+        await saveIds();
         res.status(201).json({
             message: 'Recipe created successfully',
             recipe: recipe,

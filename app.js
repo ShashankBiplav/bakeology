@@ -20,6 +20,8 @@ const userRoutes = require('./routes/user');
 
 const chefRoutes = require('./routes/chef');
 
+const adminRoutes = require('./routes/administrator');
+
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images');
@@ -59,6 +61,8 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 
 app.use('/chef', chefRoutes);
+
+app.use('/admin', adminRoutes);
 
 //central error handling middleware
 app.use((error, req, res, next) => {

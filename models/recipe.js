@@ -16,7 +16,10 @@ const recipeSchema = new Schema({
     required: true,
   },
   ingredients: [{ type: String }],
-  categories: [{ type: String}],
+  categories: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Category'
+  }],
   steps: [{ type: String }],
   chef:{
       type: Schema.Types.ObjectId,
