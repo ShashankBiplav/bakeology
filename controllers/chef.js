@@ -152,6 +152,11 @@ exports.updateRecipe = async (req, res, next) =>{
         if (imageUrl !== recipe.imageUrl) { //new image was uploaded
             clearImage(recipe.imageUrl);
         }
+        for (const id of recipe.categories) {
+            const category = await Category.findById(id);
+            category.recipes.pull(recipe);
+            await category.save();
+        }
         recipe.title = title;
         recipe.chef = chef;
         recipe.duration = duration;
@@ -159,8 +164,16 @@ exports.updateRecipe = async (req, res, next) =>{
         recipe.complexity = complexity;
         recipe.isVegetarian = isVegetarian;
         recipe.ingredients = ingredients;
-        recipe.catgefories = categories;
+        recipe.categories = categories;
         recipe.steps = steps;
+        async function saveIds () {
+            for (const id of categories) {
+                const category = await Category.findById(id);
+                category.recipes.push(recipe);
+                await category.save();
+            }
+        }
+        await saveIds();
         const result = await recipe.save();
         res.status(200).json({
             message: 'Recipe updated!',
@@ -194,6 +207,11 @@ exports.deleteRecipe = async (req, res, next) => {
         await Recipe.findByIdAndRemove(recipeId);
         const chef = await Chef.findById(req.userId);
         chef.recipes.pull(recipeId);
+        for (const id of recipe.categories) {
+            const category = await Category.findById(id);
+            category.recipes.pull(recipe);
+            await category.save();
+        }
         await chef.save();
         res.status(200).json({
             message: 'Recipe deleted.'
