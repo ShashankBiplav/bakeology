@@ -162,6 +162,7 @@ exports.updateRecipe = async (req, res, next) =>{
         recipe.duration = duration;
         recipe.affordability = affordability;
         recipe.complexity = complexity;
+        recipe.imageUrl = imageUrl;
         recipe.isVegetarian = isVegetarian;
         recipe.ingredients = ingredients;
         recipe.categories = categories;

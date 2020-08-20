@@ -6,7 +6,12 @@ const isAuth = require('../middleware/is-auth');
 
 const adminController = require('../controllers/administrator');
 
-//get all chefs          GET => /administrator/chefs
+//create a category          POST => /administrator/category
 router.post('/category',isAuth, adminController.createCategory);
+
+//edit a category            PUT => /administrator/category/categoryId
+router.put('/category/:categoryId', adminController.updateCategory);
+
+
 
 module.exports = router;
