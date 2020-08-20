@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 
 const multer = require('multer');
 
+const helmet = require('helmet');
+
 require('dotenv').config();
 
 const port = process.env.PORT|| 5500;
@@ -63,6 +65,8 @@ app.use('/user', userRoutes);
 app.use('/chef', chefRoutes);
 
 app.use('/admin', adminRoutes);
+
+app.use(helmet());
 
 //central error handling middleware
 app.use((error, req, res, next) => {
