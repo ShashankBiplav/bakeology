@@ -235,3 +235,5 @@ exports.administratorLogin = async (req, res, next) =>{
         next(err);
     }
 };
+
+//TODO: ADD Reset Password functionality

@@ -2,15 +2,9 @@ const fs = require('fs');
 
 const path = require('path');
 
-const mongoose = require("mongoose");
-
-const Recipe = require('../models/recipe');
-
 const Chef = require('../models/chef');
 
 const Category = require('../models/category');
-
-const Administrator = require('../models/administrator');
 
 exports.createCategory = async (req, res, next) => {
     if (!req.file) {

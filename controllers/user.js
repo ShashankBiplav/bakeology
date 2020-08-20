@@ -1,7 +1,5 @@
 const fs = require('fs');
 
-const path = require('path');
-
 const Recipe = require('../models/recipe');
 
 const Category = require('../models/category');

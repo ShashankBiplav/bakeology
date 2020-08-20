@@ -8,8 +8,6 @@ const Chef = require('../models/chef');
 
 const Category = require('../models/category');
 
-const mongoose = require("mongoose");
-
 exports.getChefRecipes = async (req, res, next) => {
     const totalRecipes = await Recipe.find({chef:req.userId}).countDocuments();
     const recipes = await Recipe.find({chef:req.userId});
