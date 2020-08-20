@@ -4,6 +4,8 @@ const router = express.Router();
 
 const userController = require('../controllers/user');
 
+const isAuth = require('../middleware/is-auth');
+
 //to get all the recipes     GET=> /user/recipes
 router.get('/recipes',userController.getRecipes);
 
@@ -11,9 +13,9 @@ router.get('/recipes',userController.getRecipes);
 router.get ('/recipe/:recipeId', userController.getRecipe);
 
 //to mark as favourite       POST=> /user/mark-favourite/recipeId
-router.post('/mark-favourite/:recipeId',); //TODO: define this route+controller
+router.post('/mark-favourite/:recipeId', isAuth, userController.markRecipeAsFavourite); 
 
 //to remove from favourites  POST=> /user/remove-favourite.recipeId
-router.post('/remove-favourite/:recipeId',); //TODO: define this route+controller
+router.post('/remove-favourite/:recipeId', isAuth, userController.removeFromFavourites);
 
 module.exports = router;

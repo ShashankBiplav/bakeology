@@ -4,7 +4,9 @@ const path = require('path');
 
 const Recipe = require('../models/recipe');
 
-const Category = require('../models/category')
+const Category = require('../models/category');
+
+const User = require('../models/user');
 
 exports.getRecipes = async(req, res, next) =>{
     const currentPage = req.query.page || 1;
@@ -63,6 +65,56 @@ exports.getRecipe = async(req,res,next) =>{
       }
       next(err);
   }
+};
+
+exports.markRecipeAsFavourite = async (req, res, next) => {
+    const recipeId = req.params.recipeId;
+    try{
+        const recipe =await Recipe.findById(recipeId);
+        if (!recipe){
+            const error = new Error('Recipe not found.');
+            error.status = 404;
+            throw error;
+        }
+        const user = await User.findById(req.userId);
+        user.favourites.push(recipe);
+        await user.save();
+        res.status(200).json({
+            message: 'Marked as Favourite',
+            recipe: recipe
+        });
+    }
+    catch (err){
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.removeFromFavourites = async (req, res, next) => {
+    const recipeId = req.params.recipeId;
+    try{
+        const recipe =await Recipe.findById(recipeId);
+        if (!recipe){
+            const error = new Error('Recipe not found.');
+            error.status = 404;
+            throw error;
+        }
+        const user = await User.findById(req.userId);
+        user.favourites.pull(recipe);
+        await user.save();
+        res.status(200).json({
+            message: 'Removed from Favourites',
+            recipe: recipe
+        });
+    }
+    catch (err){
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
 };
 
 
