@@ -85,6 +85,70 @@ exports.updateCategory = async (req, res, next) => {
     }
 };
 
+exports.getAllChefs = async (req, res, next) => {
+  try {
+      const chefs = await Chef.find();
+      res.status(200).json({
+          message: 'Chefs Fetched Successfully.',
+          recipes: chefs
+      });
+  }
+  catch (err) {
+      if (!err.statusCode) {
+          err.statusCode = 500;
+      }
+      next(err);
+  }
+};
+
+exports.approveChef = async (req, res, next) => {
+    const chefId = req.params.chefId;
+    try{
+        const chef = await Chef.findById(chefId);
+        if (!chef){
+            const error = new Error('Could not find chef.');
+            error.statusCode = 404;
+            throw error;
+        }
+        chef.isApproved = true;
+        const result = await chef.save();
+        res.status(200).json({
+            message: 'Chef approved!',
+            post: result
+        });
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.disapproveChef = async (req, res, next) => {
+    const chefId = req.params.chefId;
+    try{
+        const chef = await Chef.findById(chefId);
+        if (!chef){
+            const error = new Error('Could not find chef.');
+            error.statusCode = 404;
+            throw error;
+        }
+        chef.isApproved = false;
+        const result = await chef.save();
+        res.status(200).json({
+            message: 'Chef disapproved!',
+            post: result
+        });
+    }
+    catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
 const clearImage = filePath => {
     filePath = path.join(__dirname, '..', filePath);
     fs.unlink(filePath, err => console.log(err));
