@@ -16,9 +16,9 @@ router.get('/categories',userController.getAllCategories);
 router.get ('/recipe/:recipeId', userController.getRecipe);
 
 //to mark as favourite       POST=> /user/mark-favourite/recipeId
-router.post('/mark-favourite/:recipeId', isAuth, userController.markRecipeAsFavourite);
+router.put('/mark-favourite/:recipeId', isAuth, userController.markRecipeAsFavourite);
 
-//to remove from favourites  POST=> /user/remove-favourite.recipeId
-router.post('/remove-favourite/:recipeId', isAuth, userController.removeFromFavourites);
+//to remove from favourites  POST=> /user/remove-favourite/recipeId
+router.put('/remove-favourite/:recipeId', isAuth, userController.removeFromFavourites);
 
 module.exports = router;

@@ -84,7 +84,7 @@ exports.getAllChefs = async (req, res, next) => {
       const chefs = await Chef.find();
       res.status(200).json({
           message: 'Chefs Fetched Successfully.',
-          recipes: chefs
+          chefs: chefs
       });
   }
   catch (err) {
@@ -108,7 +108,7 @@ exports.approveChef = async (req, res, next) => {
         const result = await chef.save();
         res.status(200).json({
             message: 'Chef approved!',
-            post: result
+            result: result
         });
     }
     catch (err) {
@@ -132,7 +132,7 @@ exports.disapproveChef = async (req, res, next) => {
         const result = await chef.save();
         res.status(200).json({
             message: 'Chef disapproved!',
-            post: result
+            result: result
         });
     }
     catch (err) {

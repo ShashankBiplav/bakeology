@@ -176,7 +176,7 @@ exports.updateRecipe = async (req, res, next) =>{
         const result = await recipe.save();
         res.status(200).json({
             message: 'Recipe updated!',
-            post: result
+            result: result
         });
     }
     catch (err) {
