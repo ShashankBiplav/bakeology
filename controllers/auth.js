@@ -95,7 +95,7 @@ exports.chefSignup = async (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    const profileImageUrl = req.body.profileImageUrl; //TODO: req.file.path
+    const profileImageUrl = req.file.path; //TODO: req.file.path
     const preExistingChef = await Chef.findOne({email: email});
     if (preExistingChef){
         const error = new Error('Chef with this email already exists');
