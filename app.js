@@ -10,6 +10,8 @@ const multer = require('multer');
 
 const helmet = require('helmet');
 
+const compression = require('compression');
+
 require('dotenv').config();
 
 const port = process.env.PORT|| 5500;
@@ -68,6 +70,8 @@ app.use('/admin', adminRoutes);
 
 app.use(helmet());
 
+app.use(compression())
+
 //central error handling middleware
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
@@ -85,10 +89,12 @@ mongoose.connect(process.env.MONGODB_URI,{
     useFindAndModify: false
 })
     .then(()=>{
-        console.log('Connection to DB');
-         app.listen(port, ()=>{
-            console.log(`listening on port${port}`);
-        });
+        // console.log('Connection to DB');
+         app.listen(port,
+        //  ()=>{
+        //     console.log(`listening on port${port}`);
+        // }
+        );
     }).catch(err=>{
     console.log(err);
 });
