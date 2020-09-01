@@ -237,3 +237,13 @@ exports.administratorLogin = async (req, res, next) =>{
 };
 
 //TODO: ADD Reset Password functionality
+//helper function to generate AlphaNumeric OTP
+const generateOTP = () => {
+    const string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let OTP = '';
+    const len = string.length;
+    for (let i = 0; i < 8; i++ ) {
+        OTP += string[Math.floor(Math.random() * len)];
+    }
+    return OTP;
+};
