@@ -335,27 +335,97 @@ exports.resetAdminPassword = async (req, res, next) => {
     const oneTimePassword = req.body.otp;
     const password = req.body.password;
     try {
-        const admin = await Administrator.findOne({email: email});
+        const admin = await Administrator.findOne({
+            resetToken: oneTimePassword,
+            resetTokenExpiryDate: {
+                $gt: Date.now()
+            },
+            email: email
+        })
         if (!admin) {
             const error = new Error('Admin with this email doesn\'t exist');
             error.statusCode = 401;
-            throw error;
-        }
-        if (!admin.resetToken === oneTimePassword){
-            const error = new Error('Incorrect OTP');
-            error.statusCode = 403;
-            throw error;
-        }
-        if (!(admin.resetTokenExpiryDate < Date.now())){
-            const error = new Error('OTP has expired');
-            error.statusCode = 403;
             throw error;
         }
         const hashedPassword = await bcrypt.hash(password, 12);
         admin.password = hashedPassword;
         admin.resetToken = undefined;
         admin.resetTokenExpiryDate = undefined;
-        await admin.save();
+        const data =await admin.save();
+        res.status(201).json({
+            message: 'Password Updated!',
+            result: data
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.resetChefPassword = async (req, res, next) => {
+    const email = req.body.email;
+    const oneTimePassword = req.body.otp;
+    const password = req.body.password;
+    try {
+        const chef = await Chef.findOne({
+            resetToken: oneTimePassword,
+            resetTokenExpiryDate: {
+                $gt: Date.now()
+            },
+            email: email
+        })
+        if (!chef) {
+            const error = new Error('Chef with this email doesn\'t exist');
+            error.statusCode = 401;
+            throw error;
+        }
+        const hashedPassword = await bcrypt.hash(password, 12);
+        chef.password = hashedPassword;
+        chef.resetToken = undefined;
+        chef.resetTokenExpiryDate = undefined;
+        const data =await chef.save();
+        res.status(201).json({
+            message: 'Password Updated!',
+            result: data
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.resetUserPassword = async (req, res, next) => {
+    const email = req.body.email;
+    const oneTimePassword = req.body.otp;
+    const password = req.body.password;
+    try {
+        const user = await User.findOne({
+            resetToken: oneTimePassword,
+            resetTokenExpiryDate: {
+                $gt: Date.now()
+            },
+            email: email
+        })
+        if (!user) {
+            const error = new Error('User with this email doesn\'t exist');
+            error.statusCode = 401;
+            throw error;
+        }
+        console.log("admin.resetTokenExpiryDate"+user.resetTokenExpiryDate);
+        console.log("Date.now()" + Date.now());
+        const hashedPassword = await bcrypt.hash(password, 12);
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiryDate = undefined;
+        const data =await user.save();
+        res.status(201).json({
+            message: 'Password Updated!',
+            result: data
+        });
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;

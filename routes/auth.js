@@ -52,4 +52,10 @@ router.post('/chef/get-otp', authController.getOTPforChef);
 
 router.post('/user/get-otp', authController.getOTPforUser);
 
+router.post('/administrator/reset-password', authController.resetAdminPassword);
+
+router.post('/chef/reset-password', authController.resetChefPassword);
+
+router.post('/user/reset-password', authController.resetUserPassword);
+
 module.exports = router;
