@@ -270,23 +270,57 @@ exports.getOTPforAdmin = async (req, res, next) => {
         }
         next(err);
     }
-}
-;
+};
+
+exports.resetAdminPassword = async (req, res, next) => {
+    const email = req.body.email;
+    const oneTimePassword = req.body.otp;
+    const password = req.body.password;
+    try {
+        const admin = await Administrator.findOne({email: email});
+        if (!admin) {
+            const error = new Error('Admin with this email doesn\'t exist');
+            error.statusCode = 401;
+            throw error;
+        }
+        if (!admin.resetToken === oneTimePassword){
+            const error = new Error('Incorrect OTP');
+            error.statusCode = 403;
+            throw error;
+        }
+        if (!(admin.resetTokenExpiryDate < Date.now())){
+            const error = new Error('OTP has expired');
+            error.statusCode = 403;
+            throw error;
+        }
+        const hashedPassword = await bcrypt.hash(password, 12);
+        admin.password = hashedPassword;
+        admin.resetToken = undefined;
+        admin.resetTokenExpiryDate = undefined;
+        await admin.save();
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
 
 //TODO: ADD Reset Password functionality
-//helper function to generate AlphaNumeric OTP
+//helper function to generate AlphaNumeric OTP 8 characters
 const generateOTP = () => {
-    const string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const string = '0123456789';
     let OTP = '';
     const len = string.length;
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
         OTP += string[Math.floor(Math.random() * len)];
     }
     return OTP;
 };
 
+//helper function to send OTP via SIB
 const sendEmailToResetPassword = async (email, name, resetOTP) => {
-   const sendSmtpEmail = {
+    const sendSmtpEmail = {
         to: [{
             email: email,
             name: name

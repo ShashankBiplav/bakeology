@@ -46,4 +46,6 @@ router.post('/administrator/signup',[expressValidator.check('name').trim().not()
 router.post('/administrator/login', [expressValidator.check('email').isEmail().normalizeEmail()],
    authController.administratorLogin );
 
+router.post('/administrator/get-otp', authController.getOTPforAdmin);
+
 module.exports = router;
