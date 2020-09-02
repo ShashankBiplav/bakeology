@@ -48,4 +48,8 @@ router.post('/administrator/login', [expressValidator.check('email').isEmail().n
 
 router.post('/administrator/get-otp', authController.getOTPforAdmin);
 
+router.post('/chef/get-otp', authController.getOTPforChef);
+
+router.post('/user/get-otp', authController.getOTPforUser);
+
 module.exports = router;

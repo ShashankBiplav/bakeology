@@ -272,6 +272,64 @@ exports.getOTPforAdmin = async (req, res, next) => {
     }
 };
 
+exports.getOTPforChef = async (req, res, next) => {
+    const email = req.body.email;
+    let loadedChef;
+    let generatedOTP;
+    try {
+        const chef = await Chef.findOne({email: email});
+        if (!chef) {
+            const error = new Error('Chef with this email doesn\'t exist');
+            error.statusCode = 401;
+            throw error;
+        }
+        loadedChef = chef;
+        generatedOTP = generateOTP();
+        chef.resetToken = generatedOTP;
+        chef.resetTokenExpiryDate = Date.now() + 3600000;
+        await chef.save();
+        const data = await sendEmailToResetPassword(email, loadedChef.name, generatedOTP);
+        res.status(200).json({
+            message: 'OTP sent!',
+            result: data
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getOTPforUser = async (req, res, next) => {
+    const email = req.body.email;
+    let loadedUser;
+    let generatedOTP;
+    try {
+        const user = await User.findOne({email: email});
+        if (!user) {
+            const error = new Error('User with this email doesn\'t exist');
+            error.statusCode = 401;
+            throw error;
+        }
+        loadedUser = user;
+        generatedOTP = generateOTP();
+        user.resetToken = generatedOTP;
+        user.resetTokenExpiryDate = Date.now() + 3600000;
+        await user.save();
+        const data = await sendEmailToResetPassword(email, loadedUser.name, generatedOTP);
+        res.status(200).json({
+            message: 'OTP sent!',
+            result: data
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
 exports.resetAdminPassword = async (req, res, next) => {
     const email = req.body.email;
     const oneTimePassword = req.body.otp;
