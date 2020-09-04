@@ -70,7 +70,7 @@ app.use('/admin', adminRoutes);
 
 app.use(helmet());
 
-app.use(compression())
+app.use(compression());
 
 //central error handling middleware
 app.use((error, req, res, next) => {
