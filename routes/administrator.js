@@ -21,6 +21,4 @@ router.put('/approve-chef/:chefId', adminController.approveChef);
 //disapprove a chef             PUT => /administrator/disapprove-chef/chefId
 router.put('/disapprove-chef/:chefId', adminController.disapproveChef);
 
-
-
 module.exports = router;
