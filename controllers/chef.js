@@ -250,7 +250,16 @@ exports.updateChefProfile = async(req, res, next) => {
     const chefId = req.userId;
     const name = req.body.name;
     const status = req.body.status;
-
+    const email = req.body.email;
+    let profileImageUrl = req.body.image;
+    if (req.file) {
+        profileImageUrl = req.file.path;
+    }
+    if (!profileImageUrl) {
+        const error = new Error('No file picked.');
+        error.statusCode = 422;
+        throw error;
+    }
     try {
         const chef = await Chef.findById(req.userId);
         if (!chef) {
@@ -258,10 +267,21 @@ exports.updateChefProfile = async(req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-
+        chef.name = name;
+        chef.status = status;
+        chef.profileImageUrl = profileImageUrl;
+        chef.email = email;
+        const result = await chef.save();
+        res.status(200).json({
+            message: 'Chef updated Successfully.',
+            result: result
+        });
     }
     catch (err) {
-        
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     }
 };
 

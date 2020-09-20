@@ -21,4 +21,7 @@ router.put('/recipe/:recipeId',isAuth, chefController.updateRecipe); //TODO: Def
 //delete a recipe              DELETE =>  /chef/delete-recipe/recipeId
 router.delete('/delete-recipe/:recipeId', isAuth ,chefController.deleteRecipe);  //TODO: Define this route+controller
 
+//update chef profile
+router.post('/update-profile', isAuth, chefController.updateChefProfile);
+
 module.exports = router;
