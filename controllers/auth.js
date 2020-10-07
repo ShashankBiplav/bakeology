@@ -106,7 +106,15 @@ exports.chefSignup = async (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    const profileImageUrl = req.file.path; //TODO: req.file.path
+    let profileImageUrl = req.body.image;
+    if (req.file) {
+        profileImageUrl = req.file.path;
+    }
+    if (!req.file) {
+        const error = new Error('No image provided');
+        error.statusCode = 422;
+        return next(error);
+    }
     const preExistingChef = await Chef.findOne({email: email});
     if (preExistingChef) {
         const error = new Error('Chef with this email already exists');
@@ -123,7 +131,7 @@ exports.chefSignup = async (req, res, next) => {
         });
         const result = await user.save();
         res.status(201).json({
-            message: 'User Created',
+            message: 'Chef Created',
             userId: result._id
         });
     } catch (err) {

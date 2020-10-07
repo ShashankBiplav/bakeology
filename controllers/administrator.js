@@ -7,15 +7,18 @@ const Chef = require('../models/chef');
 const Category = require('../models/category');
 
 exports.createCategory = async (req, res, next) => {
+    const title = req.body.title;
+    const colorA = req.body.colorA;
+    const colorB = req.body.colorB;
+    let iconImageUrl = req.body.image;
+    if (req.file){
+        iconImageUrl = req.file.path;
+    }
     if (!req.file) {
         const error = new Error('No image provided');
         error.statusCode = 422;
         return next(error);
     }
-    const title = req.body.title;
-    const colorA = req.body.colorA;
-    const colorB = req.body.colorB;
-    const iconImageUrl = req.file.path;
     const category = new Category({
         title: title,
         colorA: colorA,
