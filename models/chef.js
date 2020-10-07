@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const chefSchema = new Schema({
-    email:{
+     email:{
         type: String,
         required: true
     },

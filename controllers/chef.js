@@ -211,7 +211,7 @@ exports.updateRecipe = async (req, res, next) =>{
 
 exports.deleteRecipe = async (req, res, next) => {
     const recipeId = req.params.recipeId;
-    console.log(recipeId);
+    // console.log(recipeId);
     try {
         const recipe = await Recipe.findById(recipeId);
         if (!recipe){
@@ -266,6 +266,9 @@ exports.updateChefProfile = async(req, res, next) => {
             const error = new Error('Chef not found');
             error.statusCode = 404;
             throw error;
+        }
+        if (profileImageUrl !== chef.profileImageUrl) { //new image was uploaded
+            clearImage(chef.profileImageUrl);
         }
         chef.name = name;
         chef.status = status;
