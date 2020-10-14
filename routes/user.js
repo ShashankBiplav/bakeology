@@ -15,6 +15,9 @@ router.get('/categories',userController.getAllCategories);
 //to get single recipe       GET=> /user/recipes/recipeId
 router.get ('/recipe/:recipeId', userController.getRecipe);
 
+//to get all recipes of that category
+router.get('/categorized-recipes/:categoryId',userController.getAllRecipesOfCategory);
+
 //to mark as favourite       POST=> /user/mark-favourite/recipeId
 router.put('/mark-favourite/:recipeId', isAuth, userController.markRecipeAsFavourite);
 

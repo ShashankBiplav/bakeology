@@ -7,12 +7,12 @@ const Category = require('../models/category');
 const User = require('../models/user');
 
 exports.getRecipes = async(req, res, next) =>{
-    const currentPage = req.query.page || 1;
-    const perPage = 2;
+    // const currentPage = req.query.page || 1;
+    // const perPage = 2;
     try{
         const totalRecipes = await Recipe.find().countDocuments();
-        const recipes = await Recipe.find().populate('chef', 'name')
-            .skip((currentPage - 1) * perPage).limit(perPage);
+        const recipes = await Recipe.find().populate('chef', 'profileImageUrl name');
+            // .skip((currentPage - 1) * perPage).limit(perPage);
         res.status(200).json({
             message: 'Recipes Fetched Successfully.',
             recipes: recipes,
@@ -32,7 +32,7 @@ exports.getAllCategories = async (req, res, next) => {
         const categories = await Category.find();
         res.status(200).json({
             message: 'Categories Fetched Successfully.',
-            recipes: categories,
+            categories: categories,
             totalItems: totalCategories
         });
     }
@@ -63,6 +63,27 @@ exports.getRecipe = async(req,res,next) =>{
       }
       next(err);
   }
+};
+
+exports.getAllRecipesOfCategory = async(req, res, next) => {
+    const categoryId = req.params.categoryId;
+    try{
+        const recipes = await Category.findById(categoryId).populate('recipes');
+        if (!recipes){
+            const error = new Error('No recipes in this category found');
+            error.status = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'Recipe Fetched',
+            recipes: recipes
+        });
+    }catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
 };
 
 exports.markRecipeAsFavourite = async (req, res, next) => {
