@@ -6,19 +6,19 @@ const Category = require('../models/category');
 
 const User = require('../models/user');
 
-exports.getRecipes = async(req, res, next) =>{
+exports.getRecipes = async (req, res, next) => {
     // const currentPage = req.query.page || 1;
     // const perPage = 2;
-    try{
+    try {
         const totalRecipes = await Recipe.find().countDocuments();
         const recipes = await Recipe.find().populate('chef', 'profileImageUrl name');
-            // .skip((currentPage - 1) * perPage).limit(perPage);
+        // .skip((currentPage - 1) * perPage).limit(perPage);
         res.status(200).json({
             message: 'Recipes Fetched Successfully.',
             recipes: recipes,
             totalItems: totalRecipes
         });
-    }catch (err) {
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -35,8 +35,7 @@ exports.getAllCategories = async (req, res, next) => {
             categories: categories,
             totalItems: totalCategories
         });
-    }
-    catch (err) {
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -44,32 +43,32 @@ exports.getAllCategories = async (req, res, next) => {
     }
 };
 
-exports.getRecipe = async(req,res,next) =>{
-  const recipeId = req.params.recipeId;
-  try {
-      const recipe =await Recipe.findById(recipeId).populate('chef', 'name');
-      if (!recipe){
-          const error = new Error('Recipe not found.');
-          error.status = 404;
-          throw error;
-      }
-      res.status(200).json({
-          message: 'Recipe Fetched',
-          recipe: recipe
-      });
-  }catch (err){
-      if (!err.statusCode) {
-          err.statusCode = 500;
-      }
-      next(err);
-  }
+exports.getRecipe = async (req, res, next) => {
+    const recipeId = req.params.recipeId;
+    try {
+        const recipe = await Recipe.findById(recipeId).populate('chef', 'name');
+        if (!recipe) {
+            const error = new Error('Recipe not found.');
+            error.status = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'Recipe Fetched',
+            recipe: recipe
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
 };
 
-exports.getAllRecipesOfCategory = async(req, res, next) => {
+exports.getAllRecipesOfCategory = async (req, res, next) => {
     const categoryId = req.params.categoryId;
-    try{
+    try {
         const recipes = await Category.findById(categoryId).populate('recipes');
-        if (!recipes){
+        if (!recipes) {
             const error = new Error('No recipes in this category found');
             error.status = 404;
             throw error;
@@ -78,7 +77,30 @@ exports.getAllRecipesOfCategory = async(req, res, next) => {
             message: 'Recipe Fetched',
             recipes: recipes
         });
-    }catch (err) {
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getAllUserFavouriteRecipes = async (req, res, next) => {
+    const userId = req.userId;
+    try {
+        const recipes = await User.findById(userId, {
+            email: 0,
+            _id: 0,
+            password: 0,
+            name: 0,
+            resetToken: 0,
+            resetTokenExpiryDate: 0,
+        }).populate('favourites');
+        res.status(200).json({
+            message: 'Favourites Fetched',
+            recipes: recipes
+        });
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -88,9 +110,9 @@ exports.getAllRecipesOfCategory = async(req, res, next) => {
 
 exports.markRecipeAsFavourite = async (req, res, next) => {
     const recipeId = req.params.recipeId;
-    try{
-        const recipe =await Recipe.findById(recipeId);
-        if (!recipe){
+    try {
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
             const error = new Error('Recipe not found.');
             error.status = 404;
             throw error;
@@ -102,8 +124,7 @@ exports.markRecipeAsFavourite = async (req, res, next) => {
             message: 'Marked as Favourite',
             recipe: recipe
         });
-    }
-    catch (err){
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -113,9 +134,9 @@ exports.markRecipeAsFavourite = async (req, res, next) => {
 
 exports.removeFromFavourites = async (req, res, next) => {
     const recipeId = req.params.recipeId;
-    try{
-        const recipe =await Recipe.findById(recipeId);
-        if (!recipe){
+    try {
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
             const error = new Error('Recipe not found.');
             error.status = 404;
             throw error;
@@ -127,8 +148,7 @@ exports.removeFromFavourites = async (req, res, next) => {
             message: 'Removed from Favourites',
             recipe: recipe
         });
-    }
-    catch (err){
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
