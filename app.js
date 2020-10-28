@@ -12,7 +12,7 @@ const helmet = require('helmet');
 
 const compression = require('compression');
 
-require('dotenv').config();
+// require('dotenv').config();
 
 const port = process.env.PORT|| 3300;
 
