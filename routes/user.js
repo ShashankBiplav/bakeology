@@ -15,6 +15,12 @@ router.get('/categories',userController.getAllCategories);
 //to get single recipe       GET=> /user/recipes/recipeId
 router.get ('/recipe/:recipeId', userController.getRecipe);
 
+// to get all user details
+router.get('/user-details', isAuth, userController.getUserDetails);
+
+// to get all chef details
+router.get('/chef-details/:chefId', userController.getAllChefDetails);
+
 //to get all user favourite recipes
 router.get('/get-favourites/:userId', isAuth, userController.getAllUserFavouriteRecipes);
 

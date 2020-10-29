@@ -6,6 +6,8 @@ const Category = require('../models/category');
 
 const User = require('../models/user');
 
+const Chef = require('../models/chef');
+
 exports.getRecipes = async (req, res, next) => {
     // const currentPage = req.query.page || 1;
     // const perPage = 2;
@@ -154,6 +156,57 @@ exports.removeFromFavourites = async (req, res, next) => {
         }
         next(err);
     }
+};
+
+exports.getUserDetails = async (req, res, next) => {
+    const userId = req.userId;
+    try {
+        const user = await User.findById(userId, {
+            password: 0,
+            resetToken: 0,
+            resetTokenExpiryDate: 0
+        });
+        if (!user) {
+            const error = new Error('User not found.');
+            error.status = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'User Details Fetched',
+            user: user
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+};
+
+exports.getAllChefDetails = async (req, res, next) => {
+    const chefId = req.params.chefId;
+    try {
+        const chef = await Chef.findById(chefId, {
+            password: 0,
+            resetToken: 0,
+            resetTokenExpiryDate: 0
+        });
+        if (!chef) {
+            const error = new Error('Chef not found.');
+            error.status = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'Chef Details Fetched',
+            chef: chef
+        });
+    } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    }
+
 };
 
 
