@@ -190,7 +190,7 @@ exports.getAllChefDetails = async (req, res, next) => {
             password: 0,
             resetToken: 0,
             resetTokenExpiryDate: 0
-        });
+        }).populate('recipes');
         if (!chef) {
             const error = new Error('Chef not found.');
             error.status = 404;
