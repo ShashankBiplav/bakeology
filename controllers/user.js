@@ -90,17 +90,18 @@ exports.getAllRecipesOfCategory = async (req, res, next) => {
 exports.getAllUserFavouriteRecipes = async (req, res, next) => {
     const userId = req.userId;
     try {
-        const recipes = await User.findById(userId, {
+        const recipeIds = await User.findById(userId, {
             email: 0,
             _id: 0,
             password: 0,
             name: 0,
             resetToken: 0,
             resetTokenExpiryDate: 0,
-        }).populate('favourites');
+        });
+        const favouriteRecipes = await Recipe.find({_id: recipeIds.favourites}).populate('chef', 'profileImageUrl name');
         res.status(200).json({
             message: 'Favourites Fetched',
-            recipes: recipes
+            recipes: favouriteRecipes
         });
     } catch (err) {
         if (!err.statusCode) {
