@@ -326,6 +326,7 @@ exports.getOTPforUser = async (req, res, next) => {
         user.resetTokenExpiryDate = Date.now() + 3600000;
         await user.save();
         const data = await sendEmailToResetPassword(email, loadedUser.name, generatedOTP);
+        // console.log(data);
         res.status(200).json({
             message: 'OTP sent!',
             result: data
